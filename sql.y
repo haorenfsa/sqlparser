@@ -266,7 +266,7 @@ func forceEOF(yylex interface{}) {
 %type <str> set_session_or_global show_session_or_global
 %type <convertType> convert_type
 %type <columnType> column_type
-%type <columnType> int_type decimal_type numeric_type time_type char_type spatial_type
+%type <columnType> int_type decimal_type numeric_type time_type char_type spatial_type vector_type
 %type <optVal> length_opt column_default_opt column_comment_opt on_update_opt
 %type <str> charset_opt collate_opt
 %type <boolVal> unsigned_opt zero_fill_opt
@@ -660,6 +660,7 @@ column_type:
 | char_type
 | time_type
 | spatial_type
+| vector_type
 
 numeric_type:
   int_type length_opt
@@ -852,9 +853,12 @@ spatial_type:
   {
     $$ = ColumnType{Type: string($1)}
   }
-| VECTOR
+
+vector_type:
+  VECTOR length_opt
   {
     $$ = ColumnType{Type: string($1)}
+    $$.Length = $2
   }
 
 enum_values:
@@ -3120,6 +3124,7 @@ non_reserved_keyword:
 | VARBINARY
 | VARCHAR
 | VARIABLES
+| VECTOR
 | VIEW
 | VINDEX
 | VINDEXES
