@@ -293,6 +293,9 @@ func forceEOF(yylex interface{}) {
 %type <colIdent> vindex_type vindex_type_opt
 %type <bytes> alter_object_type
 
+// Vector tokens
+%token <bytes> VECTOR
+
 %start any_command
 
 %%
@@ -846,6 +849,10 @@ spatial_type:
     $$ = ColumnType{Type: string($1)}
   }
 | MULTIPOLYGON
+  {
+    $$ = ColumnType{Type: string($1)}
+  }
+| VECTOR
   {
     $$ = ColumnType{Type: string($1)}
   }
